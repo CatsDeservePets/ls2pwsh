@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -25,28 +26,36 @@ type fileInfo struct {
 	extension    map[string]style
 }
 
-func main() {
-	args, err := readInput()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, `usage: %s LS_COLORS
+const help = `usage: %s LS_COLORS
 
 Convert LS_COLORS strings to PowerShell PSStyle.FileInfo format
 
 If LS_COLORS is a single dash ('-') or absent, %s reads from the standard input.
-`, progName, progName)
-		os.Exit(2)
+`
+
+func usage() {
+	fmt.Fprintf(os.Stderr, help, progName, progName)
+	os.Exit(2)
+}
+
+func main() {
+	flag.Usage = usage
+	flag.Parse()
+	args, err := readInput(flag.Args(), os.Stdin)
+	if err != nil {
+		flag.Usage()
 	}
 	fi := fromLSCOLORS(args)
 	fmt.Println(fi.toPWSH())
 }
 
-func readInput() (string, error) {
-	if len(os.Args) > 1 && os.Args[1] != "-" {
-		return os.Args[1], nil
+func readInput(args []string, f *os.File) (string, error) {
+	if len(args) > 0 && args[0] != "-" {
+		return args[0], nil
 	}
 
-	if !term.IsTerminal(int(os.Stdin.Fd())) {
-		b, err := io.ReadAll(os.Stdin)
+	if !term.IsTerminal(int(f.Fd())) {
+		b, err := io.ReadAll(f)
 		if err != nil {
 			return "", err
 		}
