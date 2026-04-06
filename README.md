@@ -12,6 +12,10 @@ go install github.com/CatsDeservePets/ls2pwsh@latest
 
 ```
 usage: ls2pwsh LS_COLORS
+
+Convert LS_COLORS strings to PowerShell PSStyle.FileInfo format
+
+If LS_COLORS is a single dash ('-') or absent, ls2pwsh reads from the standard input.
 ```
 
 ## Example

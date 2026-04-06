@@ -28,7 +28,12 @@ type fileInfo struct {
 func main() {
 	args, err := readInput()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "usage: %s LS_COLORS\n", progName)
+		fmt.Fprintf(os.Stderr, `usage: %s LS_COLORS
+
+Convert LS_COLORS strings to PowerShell PSStyle.FileInfo format
+
+If LS_COLORS is a single dash ('-') or absent, %s reads from the standard input.
+`, progName, progName)
 		os.Exit(2)
 	}
 	fi := fromLSCOLORS(args)
@@ -36,16 +41,16 @@ func main() {
 }
 
 func readInput() (string, error) {
+	if len(os.Args) > 1 && os.Args[1] != "-" {
+		return os.Args[1], nil
+	}
+
 	if !term.IsTerminal(int(os.Stdin.Fd())) {
 		b, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			return "", err
 		}
 		return string(b), nil
-	}
-
-	if len(os.Args) > 1 {
-		return os.Args[1], nil
 	}
 
 	return "", fmt.Errorf("no input")
