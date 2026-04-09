@@ -40,11 +40,11 @@ func (f format) String() string {
 	}
 }
 
-const help = `usage: %s LS_COLORS
+const help = `usage: %s LS_COLORS | PSStyle.FileInfo
 
-Convert LS_COLORS strings to PowerShell PSStyle.FileInfo format
+Convert color strings between LS_COLORS and PowerShell PSStyle.FileInfo format
 
-If LS_COLORS is a single dash ('-') or absent, %s reads from the standard input.
+If the input is a single dash ('-') or absent, %s reads from the standard input.
 `
 
 func usage() {
