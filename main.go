@@ -205,7 +205,7 @@ func (fi fileInfo) toLSCOLORS() string {
 	}
 	if len(fi.extension) != 0 {
 		for k, v := range fi.extension {
-			fmt.Fprintf(&b, "%s=%s:", k, v)
+			fmt.Fprintf(&b, "*%s=%s:", k, v)
 		}
 	}
 
